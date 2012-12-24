@@ -1,6 +1,6 @@
 [submodule "cantata-node"]
 	path = cantata-node
-	url = https://github.com/yoonky/cantata-node.git
+	url = git://github.com/yoonky/cantata-node.git
 [submodule "cantata-web"]
 	path = cantata-web
 	url = git@github.com:bylee/cantata-web.git
