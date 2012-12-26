@@ -1,3 +1,0 @@
-cantata-jsbind
-==============
-Test
