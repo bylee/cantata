@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 DIR_TARGET=target
 rm -rf $DIR_TARGET
 
@@ -15,6 +14,11 @@ TARGET_JSBIND=$TARGET_WEB/routes
 
 PROJECT_NATIVE=cantata-native
 TARGET_NATIVE=$DIR_TARGET
+
+git clone git@github.com:bylee/$PROJECT_NODE.git
+git clone git@github.com:bylee/$PROJECT_WEB.git
+git clone git@github.com:bylee/$PROJECT_JSBIND.git
+git clone git@github.com:bylee/$PROJECT_NATIVE.git
 
 mkdir -p $DIR_TARGET
 $PROJECT_NODE/build $TARGET_NODE
