@@ -2,41 +2,44 @@
 
 SCRIPT=`readlink -f $0`
 DIR_HOME=`dirname $SCRIPT`
-DIR_TARGET=$DIR_HOME/target
-echo "Target: $DIR_TARGET"
-rm -rf $DIR_TARGET
+TIZEN_HOME="/home/bylee/tizen_sdk"
 
 PROJECT_NODE=cantata-node
-TARGET_NODE=$DIR_TARGET/res
-mkdir -p $TARGET_NODE
-
 PROJECT_WEB=cantata-web
-TARGET_WEB=$DIR_TARGET/res
-
 PROJECT_JSBIND=cantata-jsbind
-TARGET_JSBIND=$TARGET_WEB/routes
-
 PROJECT_NATIVE=cantata-native
-TARGET_NATIVE=$DIR_TARGET
 
-if ![ -e $PROJECT_NODE ];
+if ! [ -e "$PROJECT_NODE" ];
 then
 	git clone git@github.com:bylee/$PROJECT_NODE.git
 fi
-if ![ -e $PROJECT_WEB ];
+if ! [ -e "$PROJECT_WEB" ];
 then
 	git clone git@github.com:bylee/$PROJECT_WEB.git
 fi
-if ![ -e $PROJECT_JSBIND ];
+if ! [ -e "$PROJECT_JSBIND" ];
 then
 	git clone git@github.com:bylee/$PROJECT_JSBIND.git
 fi
-if ![ -e $PROJECT_NATIVE ];
+if ! [ -e "$PROJECT_NATIVE" ];
 then
 	git clone git@github.com:bylee/$PROJECT_NATIVE.git
 fi
 
-mkdir -p $DIR_TARGET
+DIR_TARGET=$DIR_HOME/target
+echo "Target: $DIR_TARGET"
+
+TARGET_NODE=$DIR_TARGET/res
+TARGET_WEB=$DIR_TARGET/res
+TARGET_JSBIND=$TARGET_WEB/routes
+TARGET_NATIVE=$DIR_TARGET
+
+rm -rf $DIR_TARGET
+mkdir -p $TARGET_NODE
+mkdir -p $TARGET_WEB
+mkdir -p $TARGET_JSBIND
+mkdir -p $TARGET_NATIVE
+
 cd $PROJECT_NODE
 ./build --prefix=$TARGET_NODE
 cd ..
@@ -46,11 +49,12 @@ cd $PROJECT_NATIVE
 ./build $TARGET_NATIVE
 cd ..
 
-export TIZEN_SDK=/home/mustafa/tizen-sdk
+
 # 사인( Sign )
 # 패키징( Packaging )
-$TIZEN_SDK/tools/smart-build-interface/bin/sbi action tizen-emulator-2.0.cpp.partner_gcc45.i386.cpp.app -- buildpackage -BUILD_DIR="$DIR_TARGET/build" -ARCH=i386 -PKG_TYPE=TPK -PKG_NAME=XjBNbH9LsP -PRJ_NAME=cantata -PKG_VER=1.0.0 -SIGN_CERT_DIR="$TIZEN_SDK/tools/certificate-generator/certificates/developer/tizen-developer-ca.cer" -SIGN_AUTHOR_KEY="$DIR_HOME/tizen.p12" -SIGN_AUTHOR_PWD="tizen" -SIGN_DIST1_KEY="$TIZEN_SDK/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12" -SIGN_DIST1_PWD="tizenpkcs12passfordsigner" -SIGN_DIST1_CA="$TIZEN_SDK/tools/certificate-generator/certificates/distributor/tizen-distributor-ca.cer" -SIGN_DIST2_KEY="" -SIGN_DIST2_PWD="" -SIGN_DIST2_CA="" -SIGN_DIST2_ROOT=""
+$TIZEN_SDK/tools/smart-build-interface/bin/sbi action tizen-emulator-2.1.native_llvm31.i386.cpp.app -- buildpackage -BUILD_DIR="$DIR_TARGET/build" -ARCH=i386 -PKG_TYPE=TPK -PKG_NAME=XjBNbH9LsP -PRJ_NAME=cantata -PKG_VER=1.0.0 -SIGN_CERT_DIR="$TIZEN_SDK/tools/certificate-generator/certificates/developer/tizen-developer-ca.cer" -SIGN_AUTHOR_KEY="$DIR_HOME/tizen.p12" -SIGN_AUTHOR_PWD="tizen" -SIGN_DIST1_KEY="$TIZEN_SDK/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12" -SIGN_DIST1_PWD="tizenpkcs12passfordsigner" -SIGN_DIST1_CA="$TIZEN_SDK/tools/certificate-generator/certificates/distributor/tizen-distributor-ca.cer" -SIGN_DIST2_KEY="" -SIGN_DIST2_PWD="" -SIGN_DIST2_CA="" -SIGN_DIST2_ROOT=""
+#$TIZEN_SDK/tools/smart-build-interface/bin/sbi action tizen-emulator-2.0.cpp.partner_gcc45.i386.cpp.app -- buildpackage -BUILD_DIR="$DIR_TARGET/build" -ARCH=i386 -PKG_TYPE=TPK -PKG_NAME=XjBNbH9LsP -PRJ_NAME=cantata -PKG_VER=1.0.0 -SIGN_CERT_DIR="$TIZEN_SDK/tools/certificate-generator/certificates/developer/tizen-developer-ca.cer" -SIGN_AUTHOR_KEY="$DIR_HOME/tizen.p12" -SIGN_AUTHOR_PWD="tizen" -SIGN_DIST1_KEY="$TIZEN_SDK/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12" -SIGN_DIST1_PWD="tizenpkcs12passfordsigner" -SIGN_DIST1_CA="$TIZEN_SDK/tools/certificate-generator/certificates/distributor/tizen-distributor-ca.cer" -SIGN_DIST2_KEY="" -SIGN_DIST2_PWD="" -SIGN_DIST2_CA="" -SIGN_DIST2_ROOT=""
 
-
+find $DIR_TARGET/build -name '*.tpk' -exec ln -s {} \;
 
 
